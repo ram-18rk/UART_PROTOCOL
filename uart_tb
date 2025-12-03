@@ -1,0 +1,44 @@
+`timescale 1ns/1ps
+
+module uart_tb;
+
+    reg clk = 0, rst = 1;
+    reg tx_start;
+    reg [7:0] tx_data;
+    wire tx_busy;
+    wire tx;
+    wire [7:0] rx_data;
+    wire rx_valid;
+
+    uart_top DUT(
+        .clk(clk),
+        .rst(rst),
+        .tx_start(tx_start),
+        .tx_data(tx_data),
+        .rx(tx),
+        .tx(tx),
+        .tx_busy(tx_busy),
+        .rx_data(rx_data),
+        .rx_valid(rx_valid)
+    );
+
+    always #10 clk = ~clk;
+
+   initial begin
+    rst = 1;
+    tx_start = 0;
+    tx_data = 8'hA5;
+    #100;
+    rst = 0;
+
+    #100;
+    tx_start = 1;
+    #20 tx_start = 0;
+
+    
+    #2_000_000;  
+
+    $stop;
+end
+
+endmodule
