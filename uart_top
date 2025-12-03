@@ -1,0 +1,41 @@
+`timescale 1ns/1ps
+module uart_top(
+    input clk,
+    input rst,
+    input tx_start,
+    input [7:0] tx_data,
+    input rx,
+    output tx,
+    output tx_busy,
+    output [7:0] rx_data,
+    output rx_valid
+);
+
+    wire tick;
+
+    baud_rate baud(
+        .clk(clk),
+        .rst(rst),
+        .tick(tick)
+    );
+
+    uart_tx tx_unit(
+        .clk(clk),
+        .rst(rst),
+        .tick(tick),
+        .tx_start(tx_start),
+        .data_in(tx_data),
+        .tx(tx),
+        .tx_busy(tx_busy)
+    );
+
+    uart_rx rx_unit(
+        .clk(clk),
+        .rst(rst),
+        .tick(tick),
+        .rx(rx),
+        .data_out(rx_data),
+        .data_valid(rx_valid)
+    );
+
+endmodule
